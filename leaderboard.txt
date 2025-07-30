@@ -1,0 +1,8 @@
+Mubdi 400 1
+Shanzad 390 2
+Mahin 385 3
+Wriddho 250 1
+Shakil 400 4
+Maruful 370 3
+Mawla 360 3
+d 100 0
