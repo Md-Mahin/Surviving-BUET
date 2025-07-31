@@ -275,8 +275,9 @@ void returntoMenu()
     {
         printf("Return to Menu\n");
         gameState = STATE_MENU;
-        iPauseSound(gameStartChannel);
+        iPauseSound(bhag_bhagChannel);
         iResumeSound(t);
+
     }
 }
 
@@ -631,7 +632,7 @@ void populate_hero_images()
 {
     for (int i = 0; i < 8; i++)
     {
-        sprintf(hero_idle[i], "assets/images/School_Boy/RCG2_Beanball_Idle_%02d.png", i + 1);
+        sprintf(hero_idle[i], "assets/images/School_Boy/RCG_Idle_%02d.png", i + 1);
     }
     for (int i = 0; i < 3; i++)
     {
@@ -687,19 +688,24 @@ void iDraw()
         iLoadImage(&img, "assets/images/credit.jpg"); // Or your image path
         iResizeImage(&img, SCREEN_WIDTH, SCREEN_HEIGHT);
         iShowLoadedImage(0, 0, &img);
+        iText(350, 30, "Press Enter To Continue", GLUT_BITMAP_9_BY_15);
     }
     else if (gameState == STATE_ABOUT_US)
     {
         iLoadImage(&img, "assets/images/about_us.jpg"); // Or your image path
         iResizeImage(&img, SCREEN_WIDTH, SCREEN_HEIGHT);
         iShowLoadedImage(0, 0, &img);
+        iText(350, 30, "Press Enter To Continue", GLUT_BITMAP_9_BY_15);
         // iPauseSound(game_start);
     }
 
-    else if (gameState == 0)
+    else if (gameState == STATE_MENU)
     {
         // Show menu
-        iIncreaseVolume(t, 100);
+        
+        //iIncreaseVolume(t, 100);
+        iPauseSound(bhag_bhagChannel);
+        iResumeSound(t);
         // iPauseSound(game_start);
 
         iLoadImage(&img, "assets/images/background_jump.jpg");
@@ -710,7 +716,7 @@ void iDraw()
         iSetColor(80, 200, 120);
         iFilledRectangle(70, 185, 250, 30);
         iSetColor(41, 19, 36);
-        iText(80, 200, "SURVIVING BUET!!!!!", GLUT_BITMAP_9_BY_15);
+        iText(110, 195, "SURVIVING BUET!!!!!", GLUT_BITMAP_9_BY_15);
 
         // Buttons
         drawButton(BTN_NEWGAME, BTN_NEWGAME_X, BTN_NEWGAME_Y, BTN_WIDTH, BTN_HEIGHT, "NEW GAME");
@@ -878,6 +884,10 @@ void iDraw()
     else if (gameState == STATE_GAME_STARTED)
     {
         iClear();
+        if (soundOn && bhag_bhagChannel == -1)
+        {
+            bhag_bhagChannel = iPlaySound("assets/sounds/bhag_bhag.wav", true);
+        }
 
         // iResumeSound(game_start);
         //  score??
@@ -900,7 +910,7 @@ void iDraw()
             iText(20, SCREEN_HEIGHT - 80, cgpaStr, GLUT_BITMAP_HELVETICA_18);
 
             iSetColor(255, 100, 100);
-            iText(SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT - 50, cgpaMsg, GLUT_BITMAP_TIMES_ROMAN_24);
+            iText(SCREEN_WIDTH / 2 - 80, SCREEN_HEIGHT - 50, cgpaMsg, GLUT_BITMAP_TIMES_ROMAN_24);
         }
 
         //   background
@@ -1016,18 +1026,15 @@ void iDraw()
                     if (playerScore >= 20)
                     {
                         playerScore -= 20;
-                        if (soundOn && loseChannel == -1)
+                        if (soundOn)
                         {
                             loseChannel = iPlaySound("assets/sounds/losing_sound.wav", false);
                         }
                     }
                 }
             }
-            if (soundOn && bhag_bhagChannel == -1)
-            {
-                bhag_bhagChannel = iPlaySound("assets/sounds/bhag_bhag.wav", true);
-            }
         }
+        
 
         // labtest
         char scoreText[50];
@@ -1243,7 +1250,7 @@ void iDraw()
             char cgpaMsg[100];
             sprintf(cgpaMsg, "YOUR CGPA is %.2f", cgpa);
             iSetColor(255, 255, 255);
-            iText(320, 200, cgpaMsg, GLUT_BITMAP_TIMES_ROMAN_24);
+            iText(370, 200, cgpaMsg, GLUT_BITMAP_TIMES_ROMAN_24);
         }
 
         if (currentLevel >= MAX_LEVELS)
@@ -1488,7 +1495,7 @@ void iMouse(int button, int state, int mx, int my)
             {
                 gameState = STATE_MENU;
                 if ((soundOn && gameStartChannel == -1))
-                iResumeSound(t);
+                    iResumeSound(t);
             }
         }
 
@@ -1940,8 +1947,6 @@ int main(int argc, char *argv[])
     gameState = STATE_WELCOME;
 
     iInitializeSound();
-
-    // game_start = iPlaySound("assets/sounds/bhag_bhag.wav", true);
 
     t = iPlaySound("assets/sounds/Opening_Titles.wav", true);
     iInitialize(SCREEN_WIDTH, SCREEN_HEIGHT, "Surviving BUET");

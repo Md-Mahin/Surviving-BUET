@@ -1,0 +1,8 @@
+Mubdi 400 1
+d 400 0
+Shanzad 390 2
+shanzad 390 0
+Mahin 385 3
+d 380 0
+shanzad 350 0
+dihan 340 0
