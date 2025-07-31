@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <mmsystem.h>
-
+//egula design related constant
 #define SCREEN_WIDTH 900
 #define SCREEN_HEIGHT 510
 #define BTN_NEWGAME_X 110
@@ -43,7 +43,6 @@
 #define BTN_SCORE_BACK_Y 100
 #define BTN_SCORE_BACK_W 150
 #define BTN_SCORE_BACK_H 40
-// adding a name state for name entry
 #define STATE_NAME_INPUT 6
 #define STATE_GAME_RUNNING 7
 #define STATE_GAME_STARTED 8
@@ -59,17 +58,17 @@ int savedGameCount = 0;
 #define SAVED_BTN_GAP 50
 
 #define PAUSE_BTN_X 20
-#define PAUSE_BTN_Y (SCREEN_HEIGHT - 50) // This keeps it top-left corner
+#define PAUSE_BTN_Y (SCREEN_HEIGHT - 50) 
 #define PAUSE_BTN_W 50
 #define PAUSE_BTN_H 30
 
 #define MAX_BUTTONS 20
 
-float buttonHoverAlpha[MAX_BUTTONS]; // 0 to 1
+float buttonHoverHoy[MAX_BUTTONS]; 
 bool buttonHovering[MAX_BUTTONS];    // true if mouse is over
 
 Image saved_games_background;
-// define coin count
+// coin koyta
 #define LEVEL_WIDTH 1500
 #define MIN_DISTANCE_BETWEEN 200
 #define BASE_COIN_COUNT 50
@@ -85,7 +84,7 @@ typedef struct
     int score;
 } Entry;
 
-// void updateLeaderboard(const char *name, int score, int level);
+//coin kothay
 int base_coin_positions[BASE_COIN_COUNT] = {
     400, 600, 900, 1300, 1530, 1800, 2100, 2550, 2700, 3000,
     3300, 3600, 3900, 4200, 4300, 4850, 5175, 5435, 5700, 6000,
@@ -93,9 +92,9 @@ int base_coin_positions[BASE_COIN_COUNT] = {
     9360, 9600, 9900, 10100, 10500, 10830, 11120, 11400, 11700, 12000,
     12300, 12600, 12900, 13250, 13500, 13800, 14100, 14400, 14700, 15000};
 
-// global variables for sprite animation
+// sprite norachora
 #define NUM_RUN_FRAMES 10
-float velocityY = 0; // Vertical velocity
+float velocityY = 0; // laaaaf
 bool isJumping = false;
 float gravity = -0.5f;
 float groundY = 85;
@@ -127,23 +126,23 @@ Image lvlbg1;
 int worldOffsetX = 0;
 int hoveredSavedIndex = -1;
 int savedScores[MAX_SAVED_GAMES];
-int savedPositions[MAX_SAVED_GAMES]; // for worldOffsetX
+int savedPositions[MAX_SAVED_GAMES]; 
 
-int gameState = STATE_WELCOME; // 0 = menu, 1 = playing, etc.
-// obstacle globals
+int gameState = STATE_WELCOME; // sob state alada kore like ,main menu ,options,saved games,new games etc
+
 #define OBSTACLE_FRAMES 4
 Image rotatingObstacleFrames[OBSTACLE_FRAMES];
 int currentObstacleFrame = 0;
 
 int currentSaveSlot = -1;
-int optionsReturnState = STATE_MENU; // default is to return to main menu
+int optionsReturnState = STATE_MENU; 
 int t;
-int welcomeTimer = 300; // 300 frames = ~10 seconds if timer interval is 33ms
+int welcomeTimer = 300;
 int hoveredButtonID = -1;
 int coin_sound;
 int point_lose;
-// int game_start;
-int returnFromSettingsState = STATE_MENU; // default fallback
+
+int returnFromSettingsState = STATE_MENU; 
 
 typedef struct
 {
@@ -155,9 +154,9 @@ typedef struct
 LeaderboardEntry leaderboard[MAX_SCORES];
 int leaderboardCount = 0;
 
-// Adding sound
 
-// animating the character sprite
+
+// hero norachora
 enum
 {
     IDLE,
@@ -179,7 +178,7 @@ enum ButtonIDs
     BTN_SAVEEXIT,
     BTN_OPTIONS_PAUSED,
     BTN
-    // ...add more if needed
+    
 };
 
 int pic_x;
@@ -222,7 +221,7 @@ bool showCGPA = false;
 int cgpaDisplayTimer = 200;
 
 #define MAX_OBSTACLES 1000
-int obstacle_positions[MAX_OBSTACLES]; // X positions in world
+int obstacle_positions[MAX_OBSTACLES]; // CT kothay kothay ase
 int obstacle_width = 70;
 int obstacle_height = 70;
 bool obstacle_visible[MAX_OBSTACLES];
@@ -231,9 +230,9 @@ int coin_positions[MAX_COINS];
 int lab_positions[MAX_LAB];
 bool coin_collected[MAX_COINS] = {false};
 bool lab_collected[MAX_LAB] = {false};
-int coin_interval = 600; // distance between coins in world
+int coin_interval = 600; // 2 ta coin er moddhe distance
 float velocityX = 0;
-bool isAirborne = false; // Already covered by isJumping, but useful if you want
+bool isAirborne = false; 
 float baseSpeed = 10.0f;
 float speedMultiplier = 1.0f;
 
@@ -247,19 +246,19 @@ int bhag_bhagChannel = -1;
 char terms[8][5] = {
     "1-1", "1-2", "2-1", "2-2",
     "3-1", "3-2", "4-1", "4-2"};
-// Fixed positions for coins and obstacles per level
+//coin kothay
 int fixedCoinPositions[MAX_LEVELS][BASE_COIN_COUNT] = {
     {300, 600, 950, 1250, 1550, 1850, 2150, 2450, 2750, 3050,
      3350, 3650, 3950, 4250, 4550, 4850, 5150, 5450, 5750, 6050,
      6350, 6650, 6950, 7250, 7550, 7850, 8150, 8450, 8750, 9050,
      9350, 9650, 9950, 10250, 10550, 10850, 11150, 11450, 11750, 12050,
      12350, 12650, 12950, 13250, 13550, 13850, 14150, 14450, 14750, 15000},
-    // Add more levels as needed...
+    
 };
 
 int fixedLabPositions[MAX_LEVELS][BASE_LAB_COUNT] = {
     {450, 2000, 2550, 4550, 6780, 9900, 11300, 13100, 14000, 14400},
-    // Add more levels as needed...
+    
 };
 
 int fixedObstaclePositions[MAX_LEVELS][MAX_OBSTACLES] = {
@@ -277,7 +276,6 @@ void returntoMenu()
         gameState = STATE_MENU;
         iPauseSound(bhag_bhagChannel);
         iResumeSound(t);
-
     }
 }
 
@@ -289,13 +287,13 @@ void initializeTF()
 
 void drawButton(int id, int x, int y, int w, int h, const char *text)
 {
-    float alpha = buttonHoverAlpha[id];
+    float alpha = buttonHoverHoy[id];
 
     int r = (int)(26 + alpha * (180 - 26));
     int g = (int)(151 + alpha * (255 - 151));
     int b = (int)(42 + alpha * (180 - 42));
 
-    int expand = (int)(alpha * 5); // makes the button "grow"
+    int expand = (int)(alpha * 5); 
 
     iSetColor(r, g, b);
     iFilledRectangle(x - expand, y - expand, w + 2 * expand, h + 2 * expand);
@@ -304,9 +302,9 @@ void drawButton(int id, int x, int y, int w, int h, const char *text)
     iText(x + 20, y + 10, text);
 }
 
-void appendToLeaderboard(const char *name, int level, int score)
+void leaderboardELagao(const char *name, int level, int score)
 {
-    Entry entries[MAX_LINES + 1]; // +1 for potential new entry
+    Entry entries[MAX_LINES + 1]; 
     int count = 0;
 
     FILE *fp = fopen("leaderboard.txt", "r");
@@ -354,7 +352,7 @@ void appendToLeaderboard(const char *name, int level, int score)
     // Insert the new entry
     if (replaceIndex != -1)
     {
-        // Shift lines down from replaceIndex
+        
         for (int i = count < MAX_LINES ? count : MAX_LINES - 1; i > replaceIndex; i--)
         {
             entries[i] = entries[i - 1];
@@ -408,7 +406,7 @@ void loadAndSortLeaderboardFromFile(const char *filename)
     }
     fclose(fp);
 
-    // Sort descending: level first, then score
+    // Leaderboard sorting : Boro theke choto
     for (int i = 0; i < leaderboardCount - 1; i++)
     {
         for (int j = i + 1; j < leaderboardCount; j++)
@@ -468,61 +466,6 @@ void loadSavedGamesFromFile()
 
     fclose(fp);
 }
-
-// void saveLeaderboard()
-// {
-//     // updateLeaderboard();
-//     // sortLeaderboard();
-//     FILE *fp = fopen("leaderboard.txt", "w");
-//     if (fp == NULL)
-//     {
-//         printf("Error: Could not save leaderboard!\n");
-//         return;
-//     }
-//     for (int i = 0; i < MAX_SCORES; i++)
-//     {
-//         fprintf(fp, "%d %s %d\n", totalLevelsPlayed, playerNames[i], playerScores[i]);
-//     }
-//     loadAndSortLeaderboardFromFile("leaderboard.txt");
-//     for (int i = 0; i < leaderboardCount; i++)
-//     {
-//         char msg[100];
-//         sprintf(msg, "%s - Level %d - CGPA %.2f", leaderboard[i].name,
-//                 leaderboard[i].level,
-//                 leaderboard[i].score / 100.0);
-//         iText(300, 400 - i * 30, msg);
-//     }
-
-//     fclose(fp);
-//}
-
-// void updateLeaderboard(const char *name, int score, int level)
-// {
-//     // Insert into leaderboard only if it's better than existing ones
-//     for (int i = 0; i < MAX_SCORES; i++)
-//     {
-//         if (level > savedLevels[i] || (level == savedLevels[i] && score > playerScores[i]))
-//         {
-//             // Shift lower scores down
-//             for (int j = MAX_SCORES - 1; j > i; j--)
-//             {
-//                 savedLevels[j] = savedLevels[j - 1];
-//                 playerScores[j] = playerScores[j - 1];
-//                 strcpy(playerNames[j], playerNames[j - 1]);
-//             }
-
-//             // Insert new score
-//             savedLevels[i] = level;
-//             playerScores[i] = score;
-//             strncpy(playerNames[i], name, 19);
-//             playerNames[i][19] = '\0';
-
-//             break;
-//         }
-//     }
-
-//     saveLeaderboard(); // Save to file after update
-// }
 
 bool isPositionFarFromObstacles(int posX, int obstacle_positions[], int count)
 {
@@ -674,25 +617,21 @@ void move()
         pic_coin_x = SCREEN_WIDTH;
 }
 
-/*
-function iDraw() is called again and again by the system.
-*/
-
 void iDraw()
 {
     iClear();
 
     if (gameState == STATE_WELCOME)
     {
-        // iPauseSound(game_start);
-        iLoadImage(&img, "assets/images/credit.jpg"); // Or your image path
+        
+        iLoadImage(&img, "assets/images/credit.jpg"); // Credit image showing the devs
         iResizeImage(&img, SCREEN_WIDTH, SCREEN_HEIGHT);
         iShowLoadedImage(0, 0, &img);
         iText(350, 30, "Press Enter To Continue", GLUT_BITMAP_9_BY_15);
     }
     else if (gameState == STATE_ABOUT_US)
     {
-        iLoadImage(&img, "assets/images/about_us.jpg"); // Or your image path
+        iLoadImage(&img, "assets/images/about_us.jpg"); // basically controls gula ke represent kore
         iResizeImage(&img, SCREEN_WIDTH, SCREEN_HEIGHT);
         iShowLoadedImage(0, 0, &img);
         iText(350, 30, "Press Enter To Continue", GLUT_BITMAP_9_BY_15);
@@ -701,12 +640,11 @@ void iDraw()
 
     else if (gameState == STATE_MENU)
     {
-        // Show menu
-        
-        //iIncreaseVolume(t, 100);
+        //Menu show korbe
+
         iPauseSound(bhag_bhagChannel);
         iResumeSound(t);
-        // iPauseSound(game_start);
+        
 
         iLoadImage(&img, "assets/images/background_jump.jpg");
         iResizeImage(&img, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -724,28 +662,14 @@ void iDraw()
         drawButton(BTN_OPTIONS, BTN_OPTIONS_X, BTN_OPTIONS_Y, BTN_WIDTH, BTN_HEIGHT, "OPTIONS");
         drawButton(BTN_EXIT, BTN_EXIT_X, BTN_EXIT_Y, BTN_WIDTH, BTN_HEIGHT, "EXIT");
 
-        // iSetColor(26, 151, 42);
-        // iFilledRectangle(BTN_SAVED_X, BTN_SAVED_Y, BTN_WIDTH, BTN_HEIGHT);
-        // iSetColor(41, 19, 36);
-        // iText(BTN_SAVED_X + 10, BTN_SAVED_Y + 10, "SAVED GAMES", GLUT_BITMAP_9_BY_15);
-
-        // iSetColor(26, 151, 42);
-        // iFilledRectangle(BTN_OPTIONS_X, BTN_OPTIONS_Y, BTN_WIDTH, BTN_HEIGHT);
-        // iSetColor(41, 19, 36);
-        // iText(BTN_OPTIONS_X + 20, BTN_OPTIONS_Y + 10, "OPTIONS", GLUT_BITMAP_9_BY_15);
-
-        // iSetColor(26, 151, 42);
-        // iFilledRectangle(BTN_EXIT_X, BTN_EXIT_Y, BTN_WIDTH, BTN_HEIGHT);
-        // iSetColor(41, 19, 36);
-        // iText(BTN_EXIT_X + 30, BTN_EXIT_Y + 12, "EXIT", GLUT_BITMAP_9_BY_15);
+        
     }
 
     else if (gameState == 1)
     {
         // Start game
-        // user name input
+    
         iPauseSound(t);
-        // iPauseSound(game_start);
 
         iLoadImage(&img, "assets/images/background.jpg");
         iResizeImage(&img, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -766,11 +690,11 @@ void iDraw()
         iText(345, 160, playerName, GLUT_BITMAP_HELVETICA_18);
 
         iSetColor(180, 180, 180);
-        // iText(310, 320, "Press ENTER to continue", GLUT_BITMAP_9_BY_15);
+    
     }
     else if (gameState == STATE_OPTIONS)
     {
-        // iPauseSound(game_start);
+        
         iLoadImage(&img, "assets/images/background.jpg");
         iResizeImage(&img, SCREEN_WIDTH, SCREEN_HEIGHT);
         iShowLoadedImage(0, 0, &img);
@@ -799,7 +723,7 @@ void iDraw()
     else if (gameState == STATE_SCOREBOARD)
     {
         iClear();
-        // sortLeaderboard();
+       
 
         iSetColor(255, 255, 255);
         iText(350, 450, "Leaderboard");
@@ -810,13 +734,13 @@ void iDraw()
         iSetColor(0, 0, 0);
         iText(BTN_SCORE_BACK_X + 50, BTN_SCORE_BACK_Y + 15, "Back");
 
-        // Draw leaderboard entries
+        
 
         for (int i = 0; i < MAX_SCORES; i++)
         {
             loadAndSortLeaderboardFromFile("leaderboard.txt");
 
-            // Show only top 8 scores with term labels
+            // Leaderboard is only  for toppers
             char terms[8][5] = {
                 "1-1", "1-2", "2-1", "2-2",
                 "3-1", "3-2", "4-1", "4-2"};
@@ -849,17 +773,17 @@ void iDraw()
         iSetColor(255, 255, 255);
         iText(330, 350, "GENERAL SETTINGS", GLUT_BITMAP_TIMES_ROMAN_24);
 
-        // === Sound Toggle Button ===
+        // Sound Toggle Button
         if (soundOn)
-            iSetColor(100, 255, 100); // green for ON
+            iSetColor(100, 255, 100); // green hole ON
         else
-            iSetColor(255, 100, 100); // red for OFF
+            iSetColor(255, 100, 100); // red hole OFF
 
         iFilledRectangle(350, 240, 200, 40);
         iSetColor(0, 0, 0);
         iText(370, 255, soundOn ? "Sound: ON" : "Sound: OFF");
 
-        // === Back Button ===
+        // Back Button
         iSetColor(100, 180, 255);
         iFilledRectangle(350, 180, 200, 40);
         iSetColor(0, 0, 0);
@@ -884,6 +808,9 @@ void iDraw()
     else if (gameState == STATE_GAME_STARTED)
     {
         iClear();
+
+        
+
         if (soundOn && bhag_bhagChannel == -1)
         {
             bhag_bhagChannel = iPlaySound("assets/sounds/bhag_bhag.wav", true);
@@ -928,11 +855,11 @@ void iDraw()
 
             if (velocityX > 0)
             {
-                worldOffsetX += velocityX;
+                worldOffsetX += velocityX - 2;
             }
             else if (velocityX < 0)
             {
-                worldOffsetX += velocityX;
+                worldOffsetX += velocityX - 2;
                 if (worldOffsetX < 0)
                     worldOffsetX = 0;
             }
@@ -956,13 +883,13 @@ void iDraw()
         sprintf(term_msg, "Level : %s", terms[currentLevel]);
         iText((SCREEN_WIDTH / 2), SCREEN_HEIGHT - 48, term_msg, GLUT_BITMAP_HELVETICA_18);
 
-        // Draw Coins
+        //  Coins
         for (int i = 0; i < MAX_COINS; i++)
         {
             if (!coin_collected[i])
             {
                 int screenX = coin_positions[i] - worldOffsetX;
-                if (screenX >= -30 && screenX <= SCREEN_WIDTH) // Only draw visible ones
+                if (screenX >= -30 && screenX <= SCREEN_WIDTH)
                 {
                     iShowLoadedImage(screenX, 100, &coinFrames[currentCoinFrame]);
                 }
@@ -976,7 +903,7 @@ void iDraw()
                 int screenX = coin_positions[i] - worldOffsetX;
                 int coinWidth = 30, coinHeight = 30;
                 int heroWidth = 40, heroHeight = 60;
-                // Bounding Box Check
+                // Dhakka
                 if (screenX < pic_x + heroWidth &&
                     screenX + coinWidth > pic_x &&
                     100 < pic_y + heroHeight &&
@@ -1034,7 +961,6 @@ void iDraw()
                 }
             }
         }
-        
 
         // labtest
         char scoreText[50];
@@ -1122,9 +1048,9 @@ void iDraw()
                     }
 
                     obstacle_visible[i] = false;
-                    appendToLeaderboard(playerName, playerScore, currentLevel);
+                    leaderboardELagao(playerName, playerScore, currentLevel);
 
-                    // updateLeaderboard(playerName, playerScore, currentLevel);
+                    
                 }
             }
         }
@@ -1155,24 +1081,24 @@ void iDraw()
             int tfScreenX = tfX - worldOffsetX;
             iShowLoadedImage(tfScreenX, groundY + 10, &tfFrames[currentTfFrame]);
 
-            // Collision with hero
+            //tf dile bonus
             if (tfScreenX < pic_x + 40 && tfScreenX + 40 > pic_x && pic_y <= groundY + 40)
             {
-                // COLLISION — switch to next level
+                //  to next level
                 playerScore += 50;
                 if (playerScore > 400)
                     playerScore = 400;
                 tfVisible = false;
 
                 gameState = STATE_LEVEL_COMPLETE;
-                cgpaDisplayTimer = 100; // ⬅ Set timer to display CGPA
+                cgpaDisplayTimer = 100; 
 
                 if (totalLevelsPlayed < MAX_LEVELS)
                 {
                     levelScores[totalLevelsPlayed] = playerScore;
                 }
 
-                appendToLeaderboard(playerName, playerScore, currentLevel);
+                leaderboardELagao(playerName, playerScore, currentLevel);
                 currentLevel++;
                 totalLevelsPlayed++;
                 if (currentLevel >= MAX_LEVELS)
@@ -1207,11 +1133,12 @@ void iDraw()
     else if (gameState == STATE_PAUSED)
     {
         iClear();
+        iPauseSound(bhag_bhagChannel);
+        bhag_bhagChannel = -1;
         iLoadImage(&img, "assets/images/background.jpg");
         iResizeImage(&img, SCREEN_WIDTH, SCREEN_HEIGHT);
         iShowLoadedImage(0, 0, &img);
-        // iSetColor(0, 0, 0); // jhapsha dark
-        // iFilledRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        
 
         iSetColor(255, 0, 0);
         iFilledRectangle(350, 300, 200, 50); // Continue
@@ -1225,9 +1152,7 @@ void iDraw()
         iText(390, 240, "Save and Exit");
         iText(420, 160, "Options");
 
-        // iSetColor(255, 255, 255);
-        // iText(400, 320, "Continue");
-        // iText(370, 240, "Save and Exit");
+        
     }
 
     else if (gameState == STATE_LEVEL_COMPLETE)
@@ -1285,11 +1210,10 @@ void iDraw()
             if (totalLevelsPlayed > 0)
                 cgpa /= totalLevelsPlayed;
 
-            // char cgpaMsg[100];
-            //  sprintf(cgpaMsg, "📘 Your CGPA so far: %.2f", cgpa);
+            
 
             iSetColor(255, 200, 0);
-            // iText(340, 230, cgpaMsg, GLUT_BITMAP_HELVETICA_18);
+           
         }
     }
 
@@ -1376,7 +1300,7 @@ void iMouse(int button, int state, int mx, int my)
 
     if (gameState == STATE_MENU)
     {
-        // Check if mouse is inside New Game button
+        
         if (mx >= BTN_NEWGAME_X && mx <= BTN_NEWGAME_X + BTN_WIDTH &&
             my >= BTN_NEWGAME_Y && my <= BTN_NEWGAME_Y + BTN_HEIGHT)
         {
@@ -1436,7 +1360,7 @@ void iMouse(int button, int state, int mx, int my)
                 {
                     printf("music on clicked");
                     // iResumeSound(game_start);
-                    iResumeSound(t); // or use your bg music channel
+                    iResumeSound(t); 
                 }
                 else
                 {
@@ -1458,7 +1382,7 @@ void iMouse(int button, int state, int mx, int my)
 
         else if (gameState == STATE_SAVED_GAMES)
         {
-            // Check each saved button
+            // Check  saved button
             for (int i = 0; i < savedGameCount; i++)
             {
                 int btnY = SAVED_BTN_Y_START - i * SAVED_BTN_GAP;
@@ -1466,7 +1390,7 @@ void iMouse(int button, int state, int mx, int my)
                 if (mx >= SAVED_BTN_X && mx <= SAVED_BTN_X + SAVED_BTN_WIDTH &&
                     my >= btnY && my <= btnY + SAVED_BTN_HEIGHT)
                 {
-                    // Load that saved game
+                    // Load  saved 
 
                     strcpy(playerName, savedPlayerNames[i]);
                     nameLength = strlen(playerName);
@@ -1475,27 +1399,28 @@ void iMouse(int button, int state, int mx, int my)
 
                     playerScore = savedScores[i];
                     worldOffsetX = savedPositions[i];
-                    appendToLeaderboard(playerName, playerScore, currentLevel);
-                    // updateLeaderboard(playerName, playerScore, currentLevel);
+                    leaderboardELagao(playerName, playerScore, currentLevel);
+                    
 
                     speedMultiplier = 1.0f + 0.1f * currentLevel;
                     initializeCoins();
                     initializeObstacles();
                     initializeLabTests();
 
-                    currentSaveSlot = i; // <--- Track which save slot was loaded
+                    currentSaveSlot = i; 
 
                     printf("Loaded saved game: %s at level %d\n", playerName, currentLevel + 1);
                     return;
                 }
             }
 
-            // Back button click
+            // Back  click
             if (mx >= 370 && mx <= 520 && my >= 60 && my <= 100)
             {
                 gameState = STATE_MENU;
                 if ((soundOn && gameStartChannel == -1))
                     iResumeSound(t);
+                    //iDecreaseVolume(t,30);
             }
         }
 
@@ -1525,7 +1450,7 @@ void iMouse(int button, int state, int mx, int my)
                 return;
             }
 
-            // You can also handle other buttons like toggles here (optional)
+            
         }
 
         else if (gameState == STATE_SCOREBOARD)
@@ -1553,7 +1478,7 @@ void iMouse(int button, int state, int mx, int my)
             }
             else if (my >= 220 && my <= 270)
             {
-                // Save full state
+               
                 if (currentSaveSlot >= 0 && currentSaveSlot < savedGameCount)
                 {
                     // Overwrite the existing slot
@@ -1564,7 +1489,7 @@ void iMouse(int button, int state, int mx, int my)
                 }
                 else
                 {
-                    // Save at top of list (shift older ones down)
+                    
                     for (int i = MAX_SAVED_GAMES - 1; i > 0; i--)
                     {
                         strcpy(savedPlayerNames[i], savedPlayerNames[i - 1]);
@@ -1621,7 +1546,7 @@ void iMouse(int button, int state, int mx, int my)
                 if (savedGameCount < MAX_SAVED_GAMES)
                     savedGameCount++;
 
-                saveSavedGamesToFile(); // <- persist to file
+                saveSavedGamesToFile(); 
 
                 gameState = STATE_MENU;
                 iResumeSound(t);
@@ -1698,6 +1623,7 @@ void iKeyboard(unsigned char key)
             initializeObstacles();
             currentLevel = 0;
             worldOffsetX = 0;
+            bhag_bhagChannel = -1;   
             playerScore = 0;
         }
         else if (key == '\b')
@@ -1730,7 +1656,7 @@ void iKeyboard(unsigned char key)
             exit(0);
         }
         if (key == 27)
-        { // 27 is ASCII for ESC
+        { 
             gameState = STATE_PAUSED;
         }
 
@@ -1776,7 +1702,7 @@ void iKeyboard(unsigned char key)
 
         if (key == 'd' && key == 'w')
         {
-            velocityX = 6; // give forward motion during jump
+            velocityX = 6; 
         }
 
         if (key == 's')
@@ -1802,7 +1728,7 @@ int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
     srand(time(0));
-    // loadLeaderboard();
+    
 
     for (int i = 0; i <= MAX_LEVELS; i++)
     {
@@ -1932,14 +1858,14 @@ int main(int argc, char *argv[])
     iSetTimer(8, []()
               {
     for (int i = 0; i < MAX_BUTTONS; i++) {
-        if (buttonHovering[i] && buttonHoverAlpha[i] < 1.0f)
-            buttonHoverAlpha[i] += 0.1f;
-        else if (!buttonHovering[i] && buttonHoverAlpha[i] > 0.0f)
-            buttonHoverAlpha[i] -= 0.1f;
+        if (buttonHovering[i] && buttonHoverHoy[i] < 1.0f)
+            buttonHoverHoy[i] += 0.1f;
+        else if (!buttonHovering[i] && buttonHoverHoy[i] > 0.0f)
+            buttonHoverHoy[i] -= 0.1f;
 
         // Clamp values
-        if (buttonHoverAlpha[i] > 1.0f) buttonHoverAlpha[i] = 1.0f;
-        if (buttonHoverAlpha[i] < 0.0f) buttonHoverAlpha[i] = 0.0f;
+        if (buttonHoverHoy[i] > 1.0f) buttonHoverHoy[i] = 1.0f;
+        if (buttonHoverHoy[i] < 0.0f) buttonHoverHoy[i] = 0.0f;
     } });
 
     // Initialize window
